@@ -1,7 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-
-
 Vue.use(VueRouter)
 
 const routes = [
@@ -13,19 +11,20 @@ const routes = [
 		component: () => import("@/views/Login")
   },
   {
+    // 注册页
     path:"/register",
     component:()=>import("@/views/Register")
   },
   {
+    // 个人中心页
     path:"/personal",
     component:()=>import("@/views/Personal")
   },
   {
-    path:"/edit-profile",
-    component:()=>import("@/Edit-profile")
+    path:"/editprofile",
+    component:()=>import("@/views/EditProfile")
   }
 ]
-
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,

@@ -38,22 +38,6 @@
       注册
     </van-button>
     </router-link>
-        <!-- 头部下面第三个区域 -->
-        <!-- <div class="for">
-          <input type="text" value="账户/手机号码" v-model="form.username">
-        </div>
-
-        <! 头部下面第四个区域 -->
-        <!-- <div class="five">
-            <input type="text" value="密码" v-model="form.password">
-        </div>
-
-        <! 头部下面第五个区域 -->
-        <!-- <div class="six">
-            <button @click="sum">登录</button>
-        </div> -->
-
-        <!-- 头部下面第六个区域 --> 
         <div class="sever"> 
         </div>
    </div>
@@ -81,8 +65,16 @@ export default {
                 // 参数
                 data:this.form
             }).then(res=>{
-                const {message}=res.data;
+              // 获取到返回的信息, data是token和用户的信息，data是保存到本地的
+                const {message,data}=res.data;
+                 // 使用vant的弹窗提示用，success表示成功的弹窗
                 this.$toast.success(message);
+                // 把token和id保存到本地
+                // localStorage只能保存字符串，需要使用JSON.stringify来把对象转换成字符串
+                localStorage.setItem("userInfo", JSON.stringify(data));
+
+                // 先暂时登录成功跳转个人中心页
+                this.$router.push("/personal");
             })
       }     
     } 
