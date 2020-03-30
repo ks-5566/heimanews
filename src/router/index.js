@@ -21,9 +21,25 @@ const routes = [
     component:()=>import("@/views/Personal")
   },
   {
+    // 个人编辑页
     path:"/editprofile",
     component:()=>import("@/views/EditProfile")
-  }
+  },
+  //  个人关注页
+  {
+    path:"/follow",
+    component:()=>import("@/views/Follow")
+  },
+  //  个人跟帖页
+  {
+    path:"/comment",
+    component:()=>import("@/views/Comment")
+  },
+    //  个人跟帖页
+  {
+    path:"/star",
+    component:()=>import("@/views/Star")
+  },
 ]
 const router = new VueRouter({
   mode: 'history',
