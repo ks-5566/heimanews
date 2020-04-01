@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import App from './App.vue';
 import router from './router';
-import Vant from 'vant';
+import Vant, { Toast } from 'vant';
 import axios from "axios";
 
 // 绑定到原型,可以通过this.$axios来调用请求方法
@@ -17,13 +17,13 @@ Vue.use(Vant)
 // from：代表你即将要离开的页面
 // next：必须要调用，next就类似于你nodejs的中间件，调用才会加载后面的内
 router.beforeEach((to,from,next)=>{
-  // 判断是否去的个人中心页
-   if(to.path === "/personal"){
+//   // 判断是否去的个人中心页
+   if(to.meta.authorization){
      // 判断是否是登录状态，时候有token
     // 如果本地的数据是空会返回null，null是没有token属性，会导致js报错，
     // 所以可以加个判断，如果本地的数据空的，等于空的对象
     const userJson = JSON.parse(localStorage.getItem('userInfo')) || {};
-    // 有token可以正常访问
+    // // 有token可以正常访问
     if(userJson.token){
       next();
     }else{
@@ -34,6 +34,17 @@ router.beforeEach((to,from,next)=>{
       // 非个人中心页
       next();
    }
+});
+
+// axios响应拦截器
+axios.interceptors.response.use(res=>{
+  return res;
+},error=>{
+  const {statusCode,message}=error.response.data;
+  if(statusCode===400){
+    Toast.fail(message);
+  }
+  return Promise.reject(error)
 })
 Vue.config.productionTip = false
 
