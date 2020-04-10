@@ -15,12 +15,16 @@
   <!-- v-model就是当前的索引，是唯一的 -->
   <!-- sticky:是否使用粘性布局 -->
   <van-tabs v-model="active" sticky swipeable @scroll="handelScroll">
-      <van-tab v-for="(item,index) in categories" :key="index" :title="item.name">
+      <van-tab v-for="(item,index) in categories" 
+             v-if="item.is_top === 1 || item.name === `∨`"
+            :key="index" 
+            :title="item.name">
          <!-- 下拉刷新 -->
                 <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
                     <!-- van的列表组件 -->
                     <!-- @load 滚动到底部时候触发的函数 -->
                     <van-list
+                        immediate-check
                         v-model="item.loading"
                         :finished="item.finished"
                         finished-text="我也是有底线的"
@@ -30,9 +34,9 @@
                         <!-- 假设list是后台返回的数组，里有10个元素 -->
                         <div v-for="(item, index) in item.list" :key="index">
                             <!-- 只有单张图片的 -->
-                            <PostItem1 v-if="item.type===1 && item.cover.length > 0 && item.cover.length<3" :data="item"/>
+                            <PostItem1 v-if="item.type===1 && item.cover.length" :data="item"/>
                             <!-- 大于等于3张图片 -->
-                            <PostItem2 v-if="item.type===1 && item.cover.length>=3" :data="item"/>
+                            <PostItem2 v-if="item.type===1 && item.cover.length" :data="item"/>
                             <PostItem3 v-if="item.type===2" :data="item"/>
                         </div>
                     </van-list>
@@ -65,9 +69,13 @@ data(){
     watch: {
         // 监听tab栏的切换
         active(){
+             // 先过滤出is_top等于1的或者是v图标的栏目
+            const arr = this.categories.filter(v => {
+                return v.is_top || v.name === "∨"
+            })
             // 判断如果点击的是最后一个图标，跳转到栏目管理页
-            if(this.active === this.categories.length - 1){
-                this.$router.push("/栏目管理")
+            if(this.active === arr.length - 1){
+                this.$router.push("/category")
             }
             // 当栏目切换时候，需要重新的请求当前栏目的数据
             this.getList();
@@ -76,7 +84,7 @@ data(){
             setTimeout(() => {
                 // 页面滚动到当前栏目下的scrollY值
                 window.scrollTo(0, this.categories[this.active].scrollY);
-            }, 0)
+            }, 20)
         }
     },
     components: {
@@ -108,6 +116,18 @@ data(){
             this.getCategories();
         }
     },
+    // 组件内的守卫，每次进入页面时候都会触发
+    beforeRouteEnter(to, from, next){
+        // 如果是来自栏目管理页
+        if(from.path === "/category"){
+            // vm就是this
+            next(vm => {
+                vm.active = 0;
+            })
+        }else{
+            next();
+        }
+    },
     methods: {
         // 循环处理栏目的数据
         handleCategories(){
@@ -117,6 +137,7 @@ data(){
                 v.loading = false;  // 给每个栏目都添加是否正在请求的状态
                 v.finished = false; // 给每个栏目都添加一个文章是否全部加载完毕的状态
                 v.scrollY = 0; // 给每个栏目添加一个滚动条的高度
+                v.isload = false; // 当前栏目是否正在请求，跟上面的loading不一样，loading是组件控制的，isload我们要自己控制
                 return v;
             })
             // 请求文章列表数据,是一定要放到栏目处理之后执行；
@@ -151,7 +172,13 @@ data(){
         // 请求文章列表
         getList(){
             // 当前栏目的id,pageIndex,finished
-            const {id, pageIndex, finished, name} = this.categories[this.active];
+            const {id, pageIndex, finished, name, isload} = this.categories[this.active];
+            // 如果当前正在加载，直接返回,比如等待上一次的请求完成才执行下一次的请求
+            if(isload) return;
+            // 表示开始加载
+            this.categories[this.active].isload = true;
+            // 给当前栏目的页数加1
+            this.categories[this.active].pageIndex += 1;
             //  如果数据已经加载完毕到了最后一页，就直接return；
             if(finished) return;
             // 请求文章的配置
@@ -186,12 +213,14 @@ data(){
                 if(this.categories[this.active].list.length === total){
                     this.categories[this.active].finished = true;
                 }
+                // 加载完毕之后把isload的状态设置为false
+                this.categories[this.active].isload = false;
             })
         },
         // 请求下一页的数据
         onLoad() {
             // 给当前栏目的页数加1
-            this.categories[this.active].pageIndex += 1;
+            // this.categories[this.active].pageIndex += 1;
             // 请求文章列表
             this.getList();
         },

@@ -36,13 +36,13 @@
   />
     <div>
     <van-button round block type="info" native-type="submit">
-      登录
+      注册
     </van-button>
   </div>
   </van-form>
-    <router-link to="/register">
+    <router-link to="/login">
     <van-button round block class="rive">
-      注册
+      登录
     </van-button>
     </router-link>
         <!-- 头部下面第三个区域 -->
@@ -83,13 +83,15 @@ export default {
     //   console.log('submit', this.form);
             this.$axios({
                 // 接口地址
-                url:"/login",
+                url:"/registe",
                 // 请求方式
                 method:"POST",
                 // 参数
                 data:this.form
             }).then(res=>{
+              // 获取到返回的信息
                 const {message}=res.data;
+                // 使用vant的弹窗提示用，success表示成功的弹窗
                 this.$toast.success(message);
             })
       }     

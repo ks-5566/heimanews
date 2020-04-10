@@ -10,7 +10,7 @@
      <div class="header">
 		 <!-- 头像 -->
 		 <div class="avatar">
-			 <img src="https://www.baidu.com/img/bd_logo1.png" alt="">
+			 <!-- <img src="https://www.baidu.com/img/bd_logo1.png" alt=""> -->
 			 <img src="$axios.defaults.baseURL+userInfo.head_img" alt="">
 		 </div>
 		 <div class="profile">
@@ -45,8 +45,9 @@
   </div>
 </template>
 <script>
+// 导入列表按钮栏的组件，import后面接上的组件变量名（变量就意味着可以随便改名字）
+// @代表src目录
 import Listbar from "@/components/Listbar";
-
 // 引入第三方的日期格式处理的工具库
 import moment from "moment";
   export default{
