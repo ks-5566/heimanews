@@ -2,7 +2,7 @@
 <div class="banxin">
     <div class="toubu">
             <span class="iconfont iconnew"></span>
-            <router-link to="#" class="toubu1">
+            <router-link to="/search" class="toubu1">
                 <span class="iconfont iconsearch"></span>
                 <i>搜索新闻</i>
             </router-link>
@@ -34,9 +34,9 @@
                         <!-- 假设list是后台返回的数组，里有10个元素 -->
                         <div v-for="(item, index) in item.list" :key="index">
                             <!-- 只有单张图片的 -->
-                            <PostItem1 v-if="item.type===1 && item.cover.length" :data="item"/>
+                            <PostItem1 v-if="item.type===1 && item.cover.length<3" :data="item"/>
                             <!-- 大于等于3张图片 -->
-                            <PostItem2 v-if="item.type===1 && item.cover.length" :data="item"/>
+                            <PostItem2 v-if="item.type===1 && item.cover.length>=3" :data="item"/>
                             <PostItem3 v-if="item.type===2" :data="item"/>
                         </div>
                     </van-list>
@@ -55,7 +55,8 @@ import PostItem2 from "@/components/PostItem2"
 import PostItem3 from "@/components/PostItem3"
 
 export default {
-data(){
+name: "index",
+    data(){
         return {
             // 菜单的数据
             categories: [],
@@ -69,11 +70,11 @@ data(){
     watch: {
         // 监听tab栏的切换
         active(){
-             // 先过滤出is_top等于1的或者是v图标的栏目
+            // 先过滤出is_top等于1的或者是v图标的栏目
             const arr = this.categories.filter(v => {
                 return v.is_top || v.name === "∨"
             })
-            // 判断如果点击的是最后一个图标，跳转到栏目管理页
+            // 如果点击的是最后一个图标，就需要跳转到栏目管理页
             if(this.active === arr.length - 1){
                 this.$router.push("/category")
             }
@@ -92,29 +93,12 @@ data(){
         PostItem2,
         PostItem3
     },
+    // activated只对keep-alive的组件有用，当组件每次被渲染时候才会执行
+    // 和mounted不一样，mounded只会执行一次
+    // activated(){},
     mounted(){
-        // 获取本地的token,如果没有值就等于一个空对象
-        const {token} = JSON.parse(localStorage.getItem('userInfo')) || {}
-        // 把token保存到data
-        this.token = token;
-        // 本地的栏目数据
-        const categories = JSON.parse(localStorage.getItem('categories'));
-        if(categories){
-            // 如果当前是登录的状态，但是栏目的第一项居然不是“关注”，需要重新请求
-            // 如果当前未登录，但是栏目的第一项居然叫“关注”，也需要重新请求
-            if( token && categories[0].name !== "关注" ||
-                !token && categories[0].name === "关注"){
-                // 调用请求栏目的数据,并且保存到本地
-                this.getCategories();
-            }else{
-                this.categories = categories;
-                // 调用方法给每个栏目添加新属性
-                this.handleCategories();
-            }
-        }else{
-            // 调用请求栏目的数据,并且保存到本地
-            this.getCategories();
-        }
+        // 把方法封装到reload这个函数里面
+        this.reload();
     },
     // 组件内的守卫，每次进入页面时候都会触发
     beforeRouteEnter(to, from, next){
@@ -123,12 +107,39 @@ data(){
             // vm就是this
             next(vm => {
                 vm.active = 0;
+                // 如果是从栏目管理回来的，避免栏目管理的数据有更新，所以重新的初始化页面
+                vm.reload();
             })
         }else{
             next();
         }
     },
     methods: {
+        // 初始化页面的方法
+        reload(){
+            // 获取本地的token,如果没有值就等于一个空对象
+            const {token} = JSON.parse(localStorage.getItem('userInfo')) || {}
+            // 把token保存到data
+            this.token = token;
+            // 本地的栏目数据
+            const categories = JSON.parse(localStorage.getItem('categories'));
+            if(categories){
+                // 如果当前是登录的状态，但是栏目的第一项居然不是“关注”，需要重新请求
+                // 如果当前未登录，但是栏目的第一项居然叫“关注”，也需要重新请求
+                if( token && categories[0].name !== "关注" ||
+                    !token && categories[0].name === "关注"){
+                    // 调用请求栏目的数据,并且保存到本地
+                    this.getCategories();
+                }else{
+                    this.categories = categories;
+                    // 调用方法给每个栏目添加新属性
+                    this.handleCategories();
+                }
+            }else{
+                // 调用请求栏目的数据,并且保存到本地
+                this.getCategories();
+            }
+        },
         // 循环处理栏目的数据
         handleCategories(){
             this.categories = this.categories.map(v => {
@@ -219,8 +230,6 @@ data(){
         },
         // 请求下一页的数据
         onLoad() {
-            // 给当前栏目的页数加1
-            // this.categories[this.active].pageIndex += 1;
             // 请求文章列表
             this.getList();
         },

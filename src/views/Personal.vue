@@ -1,12 +1,9 @@
 <template>
     <div class="banxin">
-      <div class="navigate-bar">
-    <span class="iconfont iconjiantou2" @click="$router.back()"></span>
-	<strong>个人中心</strong>
-	<span class="iconfont iconshouye" @click="$router.push('/')" 
-        ></span>
-	  </div>
-	<router-link to="/edit-profile">
+      <!-- 引入自定义的头部导航组件,  showHome显示首页图标的 -->
+		<NavigateBar title="个人中心" :showHome="true"/>
+		
+	<router-link to="/editprofile">
      <div class="header">
 		 <!-- 头像 -->
 		 <div class="avatar">
@@ -48,6 +45,8 @@
 // 导入列表按钮栏的组件，import后面接上的组件变量名（变量就意味着可以随便改名字）
 // @代表src目录
 import Listbar from "@/components/Listbar";
+// 引入头部导航组件
+import NavigateBar from "@/components/NavigateBar"
 // 引入第三方的日期格式处理的工具库
 import moment from "moment";
   export default{
@@ -66,7 +65,8 @@ import moment from "moment";
 		}
 	 },
 	 components:{
-		 Listbar
+		 Listbar,
+		 NavigateBar
 	 },
 	 mounted(){
 		 // 从本地获取token和id
@@ -150,7 +150,7 @@ import moment from "moment";
 	}
 }
 .five{
-	width: 340/360*100vw;
+	width: 360/360*100vw;
 	height: 50/360*100vw;
 	background-color:#757575;
 	align-items: center;

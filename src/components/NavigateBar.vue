@@ -8,7 +8,7 @@
         <!-- $router.push()是实例下的属性，可以直接在模板中渲染 -->
         <!-- 如果showHome是true就显示 -->
         <span class="iconfont iconshouye" 
-        @click="$router.push('/')" 
+        @click="$router.push('/login')" 
         v-if="showHome"></span>
 
         <!-- 如果showHome是false就显示下面这个span -->

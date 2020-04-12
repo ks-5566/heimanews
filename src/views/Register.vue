@@ -1,16 +1,11 @@
 <template>
 <div class="benxin">
-        <!-- 第一个灰色快 -->
-        <div class="one">
-        </div>
-         <!-- 头部下面第一个区域 -->
-        <div class="two iconfont iconicon-test">
-
-        </div>
-        <!-- 头部下面第二个区域 -->
-         <div class="three iconfont iconnew">
-        
-        </div>
+    <div class="one ">
+       <span class="iconfont iconicon-test"></span>
+    </div>
+    <div class="three">
+         <span class="iconfont iconnew"></span>
+    </div>
 
         <!-- 使用vant的表单 -->
     <van-form @submit="onSubmit" class="form"> 
@@ -45,22 +40,7 @@
       登录
     </van-button>
     </router-link>
-        <!-- 头部下面第三个区域 -->
-        <!-- <div class="for">
-          <input type="text" value="账户/手机号码" v-model="form.username">
-        </div>
 
-        <! 头部下面第四个区域 -->
-        <!-- <div class="five">
-            <input type="text" value="密码" v-model="form.password">
-        </div>
-
-        <! 头部下面第五个区域 -->
-        <!-- <div class="six">
-            <button @click="sum">登录</button>
-        </div> -->
-
-        <!-- 头部下面第六个区域 --> 
         <div class="sever"> 
         </div>
    </div>
@@ -100,61 +80,52 @@ export default {
 </script>
 
 <style lang="less" scoped>
-   .benxin {
-            position: absolute;
-            width: 360px;
-            height: 700px;
-            background-color:#f2f2f2;
-            margin: 100px;
-
-        }
-
-        .one {
-            width: 360px;
-            height: 25px;
-            background-color:#757575;
-        }
-
-        .two{
-            width: 30px;
-            height: 30px;
-            margin-left: 20px;
-            margin-top: 30px;
-            font-size: 25px;
-        }
-
-        .three{
-            height: 200px;
-            text-align: center;
-            font-size: 120px;
-            color: red;
-        }
-
-        .sever{
-            position: absolute;
-            bottom: 0px;
-            width: 360px;
-            height: 50px;
-            background-color: #000000;
-        }
-        .form .van-cell{
-            width: 320px;
-            font-size: 16px;
-            padding: 10px 20px;
-            margin-bottom: 20px;
-        }
-        .form .van-cell:not(:last-child)::after{
-            border-bottom: 1px solid #333;
-            left: 0;
-        }
-        .form .van-button--info{
-            width: 320px;
-            margin-top: 30px;
-            background-color: #cc3300;
-            border: 1px solid #cc3300;
-        }
-        .rive{
-            margin-top: 20px;
-            margin-left: -20px;
-        }
+   .banxin{
+     height: 20/360*100vw;
+     background-color: #757575;
+   }
+   .one{
+     display: flex;
+      .iconicon-test{
+        margin-top: 40/360*100vw;
+        padding:  0 20/360*100vw;
+        font-size: 27px;
+      }
+   }
+   .iconnew{
+     font-size: 100px;
+     color: red;
+     padding: 0 140/360*100vw;
+   }
+   .fore{
+     padding: 0 20/360*100vw;
+     color: rgba(134, 134, 134, 0.87);
+     border-bottom: 1px #eee solid;
+     
+   }
+   .five{
+     padding: 0 20/360*100vw;
+     color: rgba(134, 134, 134, 0.87);
+     border-bottom: 1px #eee solid;
+     margin-top: 15/360*100vw;
+   }
+   .six{
+     display: flex;
+     width:300/360*100vw;
+     height: 40/360*100vw;
+    line-height: 40/360*100vw;
+    margin-left: 20/360*100vw;
+     margin-top: 80/360*100vw;
+     color: #eeeeee;
+     border-radius: 20px;
+     background-color: #cc3300;
+      span{
+      margin-left: 140/360*100vw;
+      }
+   }
+  .sever{
+    margin-top: 100/360*100vw;
+    height:50/360*100vw;
+    background: black;
+  }
 </style>
